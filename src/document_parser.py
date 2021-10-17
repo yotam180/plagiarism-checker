@@ -4,7 +4,7 @@ import numpy as np
 
 from collections import Counter
 
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_md")
 
 
 IRRELEVANT_TOKEN_TYPES = ("CARDINAL", "DATE", "ORDINAL", "PERCENTAGE")
@@ -16,11 +16,6 @@ def load_document(doc_text: str) -> "spacy.tokens.doc.Doc":
 
 # TODO: Weight entities based on their order of appearance in the document? (meaning first would get a higher weight?)
 def get_document_entities(doc: "spacy.tokens.doc.Doc"):
-    for ent in doc.ents:
-        print(ent.text, ent.label_)
-
-    print("===========")
-
     nouns = Counter(ent.text for ent in doc.ents if ent.label_ not in IRRELEVANT_TOKEN_TYPES) # TODO: Proper filter?
     return np.array([*nouns.keys()]), np.array([*nouns.values()], dtype=np.float64)
 

@@ -47,12 +47,31 @@ The six divisions were renamed the Women's National League from 2018–19.
 
 from document_parser import *
 from googler import cross_search
+from content_scrape import get_page_contents
 
-doc = load_document(wikipedia_scraped)
+doc = load_document(article_sample)
 ents, weights = get_weighted_document_entities(doc)
 selected_ents = random_entity_select(ents, weights)
 
-print(cross_search(selected_ents))
+webpages = cross_search(selected_ents)
+print(webpages)
+
+sents1 = list(sent for sent in doc.sents if sent.text.strip())
+
+for url, _ in webpages:
+    print("Checking article at:", url)
+    article = get_page_contents(url)
+    article = nlp(article or "")
+    
+    sents2 = list(sent for sent in article.sents if sent.text.strip())
+
+    for sent1, sent2 in product(sents1, sents2):
+        sim = sent1.similarity(sent2)
+        if sim >= .95:
+            print("=======")
+            print("Found:", sent1.text.strip())
+            print("Similar to:", sent2.text.strip())
+            print("Similarity:", sim)
 
 # nlp = spacy.load("en_core_web_md")
 
@@ -64,12 +83,3 @@ print(cross_search(selected_ents))
 # sents1 = list(sent for sent in doc1.sents if sent.text.strip())
 # sents2 = list(sent for sent in doc2.sents if sent.text.strip())
 
-# for sent1, sent2 in product(sents1, sents2):
-#     sim = sent1.similarity(sent2)
-#     if sim >= .95:
-#         print("=======")
-#         print("SENT1:", sent1.text.strip())
-#         print("SENT2:", sent2.text.strip())
-#         print("SENT1 ents:", sent1.ents)
-#         print("SENT2 ents:", sent2.ents)
-#         print(sim)
