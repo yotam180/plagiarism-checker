@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
 from itertools import product
+from pprint import pprint
 
 article_sample = """
 The FA Women's Premier League is the 26th season of the competition. It began on 1992.
@@ -54,28 +55,15 @@ from document_compare import DocumentComparer, TargetDocument
 doc = Document(article_sample)
 ents, weights = doc.get_weighted_entities()
 selected_ents = random_entity_select(ents, weights)
-print(selected_ents)
 
-# webpages = cross_search(selected_ents)
+webpages = cross_search(selected_ents)
 
 comparer = DocumentComparer(doc)
 
-# for url, _ in webpages:
-#     print("Checking article at:", url)
+for url, _ in webpages:
+    print("Checking article at:", url)
     
-#     article_text = get_page_contents(url)
-#     comparer.compare_to(TargetDocument(url, article_text))
+    article_text = get_page_contents(url)
+    comparer.compare_to(TargetDocument(url, article_text))
 
-article_text = get_page_contents("https://en.wikipedia.org/wiki/FA_Women%27s_National_League")
-comparer.compare_to(TargetDocument("A", article_text))
-
-# nlp = spacy.load("en_core_web_md")
-
-# doc1 = nlp(article_sample)
-# doc2 = nlp(wikipedia_scraped)
-
-# print(doc1.ents)
-
-# sents1 = list(sent for sent in doc1.sents if sent.text.strip())
-# sents2 = list(sent for sent in doc2.sents if sent.text.strip())
-
+print(comparer.as_json)

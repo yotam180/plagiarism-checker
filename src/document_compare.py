@@ -10,6 +10,7 @@ nlp = spacy.load("en_core_web_md")
 class Match(NamedTuple):
     sentence: str = ""
     similarity: float = 0
+    document: str = ""
 
 
 class Sentence(object):
@@ -17,13 +18,23 @@ class Sentence(object):
         self.spacy_sent = spacy_sent
 
         # Every value here should be a list of Match objects
-        self.suspects = {}
+        self.suspects = []
 
-    def add_suspect(self, document, match):
-        if document not in self.suspects:
-            self.suspects[document] = []
+    def add_suspect(self, match):
+        self.suspects.append(match)
 
-        self.suspects[document].append(match)
+    @property
+    def has_suspects(self):
+        return bool(self.suspects)
+
+    @property
+    def as_json(self):
+        return {
+            "sentence": self.spacy_sent.text,
+            "suspects": [
+                dict(match._asdict()) for match in self.suspects
+            ]
+        }
 
 
 class TargetDocument(object):
@@ -42,18 +53,23 @@ class DocumentComparer(object):
 
     def compare_to(self, target_doc):
         for sentence, match in self._similar_sentences(target_doc):
-            sentence.add_suspect(target_doc.name, match)
+            sentence.add_suspect(match)
+
+    @property
+    def as_json(self):
+        return [sentence.as_json for sentence in self.sentences if sentence.has_suspects]
 
     def _similar_sentences(self, document: TargetDocument):
         document_sentences = [sent for sent in document.doc.sents if DocumentComparer._filter_sentence(sent)]
 
         for original_sent, document_sent in product(self.sentences, document_sentences):
             similarity = original_sent.spacy_sent.similarity(document_sent)
-            
+
             if similarity >= DocumentComparer.SIMILARITY_THRESHOLD:
                 yield original_sent, Match(
                     sentence=document_sent.text,
-                    similarity=similarity
+                    similarity=similarity,
+                    document=document.name
                 )
 
     @staticmethod
