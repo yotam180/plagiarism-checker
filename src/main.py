@@ -45,20 +45,27 @@ The six divisions were renamed the Women's National League from 2018–19.
 
 """
 
-nlp = spacy.load("en_core_web_md")
+from document_parser import *
 
-doc1 = nlp(article_sample)
-doc2 = nlp(wikipedia_scraped)
+doc = load_document(wikipedia_scraped)
+print(get_weighted_document_entities(doc))
 
-sents1 = list(sent for sent in doc1.sents if sent.text.strip())
-sents2 = list(sent for sent in doc2.sents if sent.text.strip())
+# nlp = spacy.load("en_core_web_md")
 
-for sent1, sent2 in product(sents1, sents2):
-    sim = sent1.similarity(sent2)
-    if sim >= .95:
-        print("=======")
-        print("SENT1:", sent1.text.strip())
-        print("SENT2:", sent2.text.strip())
-        print("SENT1 ents:", sent1.ents)
-        print("SENT2 ents:", sent2.ents)
-        print(sim)
+# doc1 = nlp(article_sample)
+# doc2 = nlp(wikipedia_scraped)
+
+# print(doc1.ents)
+
+# sents1 = list(sent for sent in doc1.sents if sent.text.strip())
+# sents2 = list(sent for sent in doc2.sents if sent.text.strip())
+
+# for sent1, sent2 in product(sents1, sents2):
+#     sim = sent1.similarity(sent2)
+#     if sim >= .95:
+#         print("=======")
+#         print("SENT1:", sent1.text.strip())
+#         print("SENT2:", sent2.text.strip())
+#         print("SENT1 ents:", sent1.ents)
+#         print("SENT2 ents:", sent2.ents)
+#         print(sim)
