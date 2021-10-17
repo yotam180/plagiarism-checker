@@ -49,29 +49,25 @@ from document_parser import Document
 from entity_selection import random_entity_select
 from googler import cross_search
 from content_scrape import get_page_contents
+from document_compare import DocumentComparer, TargetDocument
 
 doc = Document(article_sample)
 ents, weights = doc.get_weighted_entities()
 selected_ents = random_entity_select(ents, weights)
+print(selected_ents)
 
-webpages = cross_search(selected_ents)
+# webpages = cross_search(selected_ents)
 
-sents1 = list(sent for sent in doc.sents if sent.text.strip())
+comparer = DocumentComparer(doc)
 
-for url, _ in webpages:
-    print("Checking article at:", url)
-    article = get_page_contents(url)
-    article = nlp(article or "")
+# for url, _ in webpages:
+#     print("Checking article at:", url)
     
-    sents2 = list(sent for sent in article.sents if sent.text.strip())
+#     article_text = get_page_contents(url)
+#     comparer.compare_to(TargetDocument(url, article_text))
 
-    for sent1, sent2 in product(sents1, sents2):
-        sim = sent1.similarity(sent2)
-        if sim >= .95:
-            print("=======")
-            print("Found:", sent1.text.strip())
-            print("Similar to:", sent2.text.strip())
-            print("Similarity:", sim)
+article_text = get_page_contents("https://en.wikipedia.org/wiki/FA_Women%27s_National_League")
+comparer.compare_to(TargetDocument("A", article_text))
 
 # nlp = spacy.load("en_core_web_md")
 

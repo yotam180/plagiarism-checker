@@ -56,13 +56,13 @@ class Document(object):
         TODO: Reason about the weights and the use of softmax in the formula.
         """
         ENTITY_LENGTH_WEIGHT = 0.5
-        ENTITY_LOCATION_WEIGHT = 3.0
+        ENTITY_LOCATION_WEIGHT = 1.0
         ENTITY_COUNT_WEIGHT = 2
         
         lengths = np.array(list(map(len, entities)))
         locations = np.arange(len(entities), 0, -1)
 
-        return softmax(locations) * ENTITY_LOCATION_WEIGHT + \
-                softmax(lengths) * ENTITY_LENGTH_WEIGHT + \
-                softmax(counts) * ENTITY_COUNT_WEIGHT
+        return locations * ENTITY_LOCATION_WEIGHT + \
+                lengths * ENTITY_LENGTH_WEIGHT + \
+                counts * ENTITY_COUNT_WEIGHT
 
