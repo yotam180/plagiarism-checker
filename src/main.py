@@ -46,9 +46,13 @@ The six divisions were renamed the Women's National League from 2018–19.
 """
 
 from document_parser import *
+from googler import cross_search
 
 doc = load_document(wikipedia_scraped)
-print(get_weighted_document_entities(doc))
+ents, weights = get_weighted_document_entities(doc)
+selected_ents = random_entity_select(ents, weights)
+
+print(cross_search(selected_ents))
 
 # nlp = spacy.load("en_core_web_md")
 

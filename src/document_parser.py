@@ -1,5 +1,5 @@
-from numpy.core.fromnumeric import argsort
 import spacy
+import random
 import numpy as np
 
 from collections import Counter
@@ -33,9 +33,9 @@ def get_weighted_document_entities(doc: "spacy.tokens.doc.Doc"):
     return ents[idx], weighted[idx]
 
 
-def _filter_entities(ents, counts):
-    # TODO: Think of a better filter (currently not allowing entities with length lower than two. Maybe we should also filter on entity type?)
-    return np.array([*map(len, ents)]) >= 3
+def random_entity_select(ents, counts, entity_selection_size=3, count=10):
+    choices = random.choices(ents, weights=counts, k=entity_selection_size * count)
+    return np.array(choices).reshape(-1, entity_selection_size)
 
 
 def _weighted_counts_formula(ents: np.array, counts: np.array) -> np.array:
