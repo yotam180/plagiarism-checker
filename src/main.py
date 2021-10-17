@@ -46,13 +46,17 @@ The six divisions were renamed the Women's National League from 2018–19.
 
 """
 
+original_text = """
+My dog, Libi, likes eating poop, and is the sole operator of the Nashville Dog Shelter!
+"""
+
 from document_parser import Document
 from entity_selection import random_entity_select
 from googler import cross_search
 from content_scrape import get_page_contents
 from document_compare import DocumentComparer, TargetDocument
 
-doc = Document(wikipedia_scraped)
+doc = Document(original_text)
 ents, weights = doc.get_weighted_entities()
 selected_ents = random_entity_select(ents, weights)
 print(selected_ents)

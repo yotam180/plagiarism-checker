@@ -8,7 +8,7 @@ def random_entity_select(entities: np.array, weights: np.array, entity_selection
     Selects randomized sets of `entity_selection_size` entities, based on the `weights` parameter (higher-weight entities
     will be chosen more frequently)
 
-    TODO: Force sets to contain different entities (no double entities)
+    TODO: Force sets to contain different entities (no double entities) - done, this should be implemented more efficiently
     """
     # choices = random.choices(entities, weights=weights, k=entity_selection_size * count)
     # return np.array(choices).reshape(-1, entity_selection_size)
@@ -25,9 +25,12 @@ def _randomly_select_with_weights(entities: np.array, weights: np.array, entity_
     w = weights
     results = []
     for i in range(entity_selection_size):
-        [choice] = random.choices(entities, weights=weights, k=1)
+        if not len(ents):
+            break
+
+        [choice] = random.choices(ents, weights=list(w), k=1)
         
-        w = ents[ents != choice]
+        w = w[ents != choice]
         ents = ents[ents != choice]
         results.append(choice)
 
