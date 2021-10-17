@@ -45,7 +45,8 @@ The six divisions were renamed the Women's National League from 2018–19.
 
 """
 
-from document_parser import Document, random_entity_select
+from document_parser import Document
+from entity_selection import random_entity_select
 from googler import cross_search
 from content_scrape import get_page_contents
 
@@ -54,7 +55,6 @@ ents, weights = doc.get_weighted_entities()
 selected_ents = random_entity_select(ents, weights)
 
 webpages = cross_search(selected_ents)
-print(webpages)
 
 sents1 = list(sent for sent in doc.sents if sent.text.strip())
 

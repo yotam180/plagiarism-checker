@@ -66,7 +66,3 @@ class Document(object):
                 softmax(lengths) * ENTITY_LENGTH_WEIGHT + \
                 softmax(counts) * ENTITY_COUNT_WEIGHT
 
-
-def random_entity_select(ents, counts, entity_selection_size=3, count=10):
-    choices = random.choices(ents, weights=counts, k=entity_selection_size * count)
-    return np.array(choices).reshape(-1, entity_selection_size)
