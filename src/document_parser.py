@@ -62,7 +62,7 @@ class Document(object):
         lengths = np.array(list(map(len, entities)))
         locations = np.arange(len(entities), 0, -1)
 
-        return locations * ENTITY_LOCATION_WEIGHT + \
-                lengths * ENTITY_LENGTH_WEIGHT + \
-                counts * ENTITY_COUNT_WEIGHT
+        return softmax(locations) * ENTITY_LOCATION_WEIGHT + \
+                softmax(lengths) * ENTITY_LENGTH_WEIGHT + \
+                softmax(counts) * ENTITY_COUNT_WEIGHT
 

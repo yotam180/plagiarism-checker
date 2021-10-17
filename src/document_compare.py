@@ -32,7 +32,11 @@ class Sentence(object):
         return {
             "sentence": self.spacy_sent.text,
             "suspects": [
-                dict(match._asdict()) for match in self.suspects
+                {
+                    "document": match.document,
+                    "sentence": match.sentence,
+                    "score": float(match.similarity)
+                } for match in self.suspects
             ]
         }
 
@@ -45,7 +49,7 @@ class TargetDocument(object):
 
 class DocumentComparer(object):
 
-    SIMILARITY_THRESHOLD = 0.95
+    SIMILARITY_THRESHOLD = 0.97
 
     def __init__(self, original):
         self.doc = original.doc

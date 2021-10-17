@@ -52,10 +52,10 @@ from googler import cross_search
 from content_scrape import get_page_contents
 from document_compare import DocumentComparer, TargetDocument
 
-doc = Document(article_sample)
+doc = Document(wikipedia_scraped)
 ents, weights = doc.get_weighted_entities()
 selected_ents = random_entity_select(ents, weights)
-
+print(selected_ents)
 webpages = cross_search(selected_ents)
 
 comparer = DocumentComparer(doc)
@@ -67,3 +67,7 @@ for url, _ in webpages:
     comparer.compare_to(TargetDocument(url, article_text))
 
 print(comparer.as_json)
+
+import json
+with open("result.json", "w") as f:
+    json.dump(comparer.as_json, f)

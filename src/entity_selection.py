@@ -10,5 +10,25 @@ def random_entity_select(entities: np.array, weights: np.array, entity_selection
 
     TODO: Force sets to contain different entities (no double entities)
     """
-    choices = random.choices(entities, weights=weights, k=entity_selection_size * count)
-    return np.array(choices).reshape(-1, entity_selection_size)
+    # choices = random.choices(entities, weights=weights, k=entity_selection_size * count)
+    # return np.array(choices).reshape(-1, entity_selection_size)
+
+    results = []
+    for i in range(count):
+        results.append(_randomly_select_with_weights(entities, weights, entity_selection_size))
+
+    return results
+
+
+def _randomly_select_with_weights(entities: np.array, weights: np.array, entity_selection_size=3):
+    ents = entities
+    w = weights
+    results = []
+    for i in range(entity_selection_size):
+        [choice] = random.choices(entities, weights=weights, k=1)
+        
+        w = ents[ents != choice]
+        ents = ents[ents != choice]
+        results.append(choice)
+
+    return results
