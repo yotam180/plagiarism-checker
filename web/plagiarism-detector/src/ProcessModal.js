@@ -3,6 +3,7 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  Fade,
   makeStyles,
   Modal,
   Typography,
@@ -42,30 +43,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProcessModal = ({ open }) => {
+const ProcessModal = ({ open, title, text }) => {
   const classes = useStyles();
   const theme = useTheme();
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Modal open={open}>
-      <Card className={classes.modalCard}>
-        <CardContent>
-          <Typography
-            variant={matchesSM ? "h6" : "h4"}
-            className={classes.processingText}
-          >
-            Processing Text
-          </Typography>
-          <CircularProgress />
-          <Typography
-            variant="subtitle2"
-            className={classes.processingDescription}
-          >
-            Searching Google (10%)
-          </Typography>
-        </CardContent>
-      </Card>
+      <Fade in={true}>
+        <Card className={classes.modalCard}>
+          <CardContent>
+            <Typography
+              variant={matchesSM ? "h6" : "h4"}
+              className={classes.processingText}
+            >
+              {title || "Processing Text"}
+            </Typography>
+            <CircularProgress />
+            <Typography
+              variant="subtitle2"
+              className={classes.processingDescription}
+            >
+              {text}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Fade>
     </Modal>
   );
 };

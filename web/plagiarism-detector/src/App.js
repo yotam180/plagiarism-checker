@@ -6,14 +6,62 @@ import TextArea from "./TextArea";
 import "./global.css";
 
 import theme from "./theme";
+import SSE from "./sse";
+import { useState } from "react";
+
+const States = {
+  EDITING: "EDITING",
+  PROCESSING: "PROCESSING",
+  DONE: "DONE",
+};
+
+const REMOTE_URL = "http://localhost:8080/process"; // TODO: Change this URL in production?
 
 function App() {
+  const [state, setState] = useState(States.EDITING);
+  const [text, setText] = useState("help");
+  const [loadingText, setLoadingText] = useState("");
+  const [analysis, setAnalysis] = useState([]);
+
+  const onSubmit = () => {
+    requestProcessing(text);
+    setLoadingText("Uploading text...");
+    setState(States.PROCESSING);
+  };
+
+  const requestProcessing = (text) => {
+    let sse = SSE(REMOTE_URL, { payload: text });
+    sse.onerror = (e) => {
+      console.error(e);
+      alert("An error occurred!"); // TODO: Prettier error message...
+    };
+    sse.onmessage = (e) => {
+      let data = JSON.parse(e.data);
+      if (data.type === "LOADING") {
+        setLoadingText(data.text);
+      } else if (data.type === "DONE") {
+        let results = data.text;
+        console.log(results);
+        setState(States.DONE);
+        setAnalysis(results);
+      } else if (data.type === "ERROR") {
+        alert(data.text);
+      }
+    };
+  };
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
         <Header />
-        <TextArea />
-        {/* <ProcessModal open /> */}
+        <TextArea
+          editable={state === States.EDITING || state === States.PROCESSING}
+          rawText={text}
+          analysis={analysis}
+          onChange={(e) => setText(e.target.value)}
+          onSubmit={onSubmit}
+        />
+        {state == States.PROCESSING && <ProcessModal open text={loadingText} />}
       </ThemeProvider>
     </div>
   );

@@ -31,13 +31,13 @@ class Sentence(object):
     def as_json(self):
         return {
             "sentence": self.spacy_sent.text,
-            "suspects": [
+            "suspect": max([
                 {
                     "document": match.document,
                     "sentence": match.sentence,
                     "score": float(match.similarity)
                 } for match in self.suspects
-            ]
+            ], key=(lambda x: x["score"]), default=None)
         }
 
 
@@ -61,7 +61,7 @@ class DocumentComparer(object):
 
     @property
     def as_json(self):
-        return [sentence.as_json for sentence in self.sentences if sentence.has_suspects]
+        return [sentence.as_json for sentence in self.sentences]
 
     def _similar_sentences(self, document: TargetDocument):
         document_sentences = [sent for sent in document.doc.sents if DocumentComparer._filter_sentence(sent)]
