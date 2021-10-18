@@ -21,7 +21,16 @@ function App() {
   const [state, setState] = useState(States.EDITING);
   const [text, setText] = useState("help");
   const [loadingText, setLoadingText] = useState("");
-  const [analysis, setAnalysis] = useState([]);
+  const [analysis, setAnalysis] = useState([
+    {
+      sentence: "Hello, world!",
+      suspect: {
+        document: "https://google.com/q?",
+        sentence: "Hello, world!!!",
+        score: 0.96,
+      },
+    },
+  ]);
 
   const onSubmit = () => {
     requestProcessing(text);

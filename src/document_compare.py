@@ -49,7 +49,7 @@ class TargetDocument(object):
 
 class DocumentComparer(object):
 
-    SIMILARITY_THRESHOLD = 0.97
+    SIMILARITY_THRESHOLD = 0.95
 
     def __init__(self, original):
         self.doc = original.doc

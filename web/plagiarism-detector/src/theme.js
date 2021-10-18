@@ -13,4 +13,13 @@ export default createTheme({
       fontWeight: 400,
     },
   },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        minHeight: "50px",
+        backgroundColor: "transparent",
+        color: "red",
+      },
+    },
+  },
 });

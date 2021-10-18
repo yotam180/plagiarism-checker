@@ -1,4 +1,12 @@
-import { Button, Card, makeStyles, TextField } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  CardHeader,
+  makeStyles,
+  TextField,
+  Tooltip,
+} from "@material-ui/core";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   textArea: {
@@ -66,6 +74,11 @@ const useStyles = makeStyles((theme) => ({
       backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2) 0 0)",
     },
   },
+  suspectCard: {
+    padding: "1rem",
+    fontSize: "0.95rem",
+    minWidth: "30rem",
+  },
 }));
 
 const count_newlines = (text) => {
@@ -78,7 +91,7 @@ const count_newlines = (text) => {
   return text.length;
 };
 
-const HighlightedSentence = ({ text, color }) => {
+const HighlightedSentence = ({ text, color, suspect }) => {
   const classes = useStyles();
 
   const colors = {
@@ -92,20 +105,54 @@ const HighlightedSentence = ({ text, color }) => {
     yellow: "transparent",
   };
 
+  const make_span = () => (
+    <span
+      style={{
+        backgroundColor: colors[color],
+        textDecorationColor: hardColors[color] || "transparent",
+      }}
+      className={color ? classes.highlighted : undefined}
+    >
+      {text}
+    </span>
+  );
+
   return (
     <>
-      {[...new Array(count_newlines(text))].map(() => (
-        <br />
+      {[...new Array(count_newlines(text))].map((_, i) => (
+        <br key={i} />
       ))}
-      <span
-        style={{
-          backgroundColor: colors[color],
-          textDecorationColor: hardColors[color] || "transparent",
-        }}
-        className={color ? classes.highlighted : undefined}
-      >
-        {text}
-      </span>
+      {color ? (
+        <Tooltip
+          interactive
+          title={
+            <Card className={classes.suspectCard}>
+              Sentence found in{" "}
+              <a href={suspect.document} target="_blank">
+                {suspect.document}
+              </a>{" "}
+              with {Math.round(suspect.score * 1000) / 10}% confidence
+              <br />
+              <div
+                style={{
+                  fontStyle: "italic",
+                  color: "#333",
+                  backgroundColor: "whitesmoke",
+                  padding: "0.5rem",
+                  borderRadius: 5,
+                  marginTop: "0.6rem",
+                }}
+              >
+                {suspect.sentence}
+              </div>
+            </Card>
+          }
+        >
+          {make_span()}
+        </Tooltip>
+      ) : (
+        make_span()
+      )}
       &nbsp;
     </>
   );
@@ -115,15 +162,19 @@ const show_analysis = (analysis) => {
   let els = [];
   for (var sentence of analysis) {
     if (!sentence.suspect) {
-      els.push(<HighlightedSentence text={sentence.sentence} />);
+      els.push(
+        <HighlightedSentence key={sentence.sentence} text={sentence.sentence} />
+      );
     } else {
       els.push(
         <HighlightedSentence
+          key={sentence.sentence}
           text={sentence.sentence}
+          suspect={sentence.suspect}
           color={
-            sentence.suspect.score >= 1.0
+            sentence.suspect.score >= 0.999
               ? "red"
-              : sentence.suspect.score >= 0.97
+              : sentence.suspect.score >= 0.975
               ? "orange"
               : "yellow"
           }
