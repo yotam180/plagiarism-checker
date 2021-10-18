@@ -1,8 +1,14 @@
-import logo from './logo.svg';
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import Header from "./Header";
+
+import theme from "./theme";
+
 function App() {
   return (
     <div className="App">
-      hello world
+      <ThemeProvider theme={theme}>
+        <Header />
+      </ThemeProvider>
     </div>
   );
 }
