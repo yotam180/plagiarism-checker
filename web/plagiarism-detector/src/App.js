@@ -19,7 +19,7 @@ const REMOTE_URL = "http://localhost:8080/process"; // TODO: Change this URL in 
 
 function App() {
   const [state, setState] = useState(States.EDITING);
-  const [text, setText] = useState("help");
+  const [text, setText] = useState("");
   const [loadingText, setLoadingText] = useState("");
   const [analysis, setAnalysis] = useState([
     {

@@ -1,17 +1,42 @@
 from collections import Counter
-
 from rich.progress import track
-from googlesearch import search
+
+from bs4 import BeautifulSoup
+import grequests
 
 
-def search_terms(terms):
-    """
-    Performs a simple Google search with a given list of terms and returns a list of results (URLs only)
+def fetch_parallel(search_terms, num_results=10, lang="en"):
+    usr_agent = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/92.0.3163.100 Safari/537.36'}
 
-    TODO: Make this return titles of pages too.
-    """
-    search_string = " ".join(terms)
-    return search(search_string)
+    escaped_search_terms = [search_term.replace(' ', '+') for search_term in search_terms]
+    google_urls = [
+        'https://www.google.com/search?q={}&num={}&hl={}'.format(
+            escaped_search_term, num_results+1, lang) for escaped_search_term in escaped_search_terms]
+
+    print(len(google_urls))
+    rs = [grequests.get(u, headers=usr_agent) for u in google_urls[:10]]
+    print(rs)
+    rs = grequests.map(rs, gtimeout=10)
+    print("alive")
+    
+    texts = [response.text for response in rs]
+    return texts
+
+
+def parse_results(raw_html):
+    soup = BeautifulSoup(raw_html, 'html.parser')
+    result_block = soup.find_all('div', attrs={'class': 'g'})
+    for result in result_block:
+        link = result.find('a', href=True)
+        title = result.find('h3')
+        if link and title:
+            yield link['href']
+
+
+def parse_multiple(result_list):
+    return [list(parse_results(result)) for result in result_list]
 
 
 def cross_search(terms_list):
@@ -39,9 +64,13 @@ def cross_search(terms_list):
         - List[str] - leading 10 results
     """
 
-    result_counter = Counter()
-    for i, terms in enumerate(terms_list):
-        result = search_terms(terms)
-        result_counter.update(result)
+    responses = fetch_parallel(
+        [" ".join(terms) for terms in terms_list]
+    )
+    responses = parse_multiple(responses)
 
-        yield i + 1, len(terms_list), result_counter.most_common(10)
+    result_counter = Counter()
+    for response in responses:
+        result_counter.update(response)
+
+    return result_counter.most_common(10)

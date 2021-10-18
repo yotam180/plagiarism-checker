@@ -1,3 +1,6 @@
+from gevent import monkey
+monkey.patch_all()
+
 from flask import Flask, Response, send_from_directory, request
 
 import time
@@ -6,7 +9,7 @@ import json
 from document_parser import Document
 from entity_selection import random_entity_select
 from googler import cross_search
-from content_scrape import get_page_contents
+from content_scrape import get_pages_contents
 from document_compare import DocumentComparer, TargetDocument
 
 
@@ -28,15 +31,19 @@ def do_text_processing(article: str):
         selected_ents = random_entity_select(ents, weights)
 
         yield message("LOADING", "Searching similar articles...")
-        for i, length, results in cross_search(selected_ents):
-            yield message("LOADING", f"Searching similar articles... {i*100//length}%")
+        # for i, length, results in cross_search(selected_ents):
+        #     yield message("LOADING", f"Searching similar articles... {i*100//length}%")
+
+        results = cross_search(selected_ents)
 
         comparer = DocumentComparer(doc)
 
-        for url, _ in results:
-            yield message("LOADING", f"Checking article at {url}")
+        yield message("LOADING", "Fetching articles...")
+        urls = [url for url, _ in results]
+        articles = get_pages_contents(urls)
 
-            article_text = get_page_contents(url)
+        yield message("LOADING", "Processing articles...")
+        for url, article_text in zip(urls, articles):
             comparer.compare_to(TargetDocument(url, article_text))
 
         yield message("DONE", comparer.as_json)
