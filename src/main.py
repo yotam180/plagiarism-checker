@@ -56,7 +56,7 @@ from googler import cross_search
 from content_scrape import get_page_contents
 from document_compare import DocumentComparer, TargetDocument
 
-doc = Document(original_text)
+doc = Document(article_sample)
 ents, weights = doc.get_weighted_entities()
 selected_ents = random_entity_select(ents, weights)
 print(selected_ents)
