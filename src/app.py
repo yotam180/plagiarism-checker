@@ -3,7 +3,6 @@ monkey.patch_all()
 
 from flask import Flask, Response, send_from_directory, request
 
-import time
 import json
 
 from document_parser import Document

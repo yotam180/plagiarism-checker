@@ -69,6 +69,7 @@ function App() {
           analysis={analysis}
           onChange={(e) => setText(e.target.value)}
           onSubmit={onSubmit}
+          onReturn={() => setState(States.EDITING)}
         />
         {state == States.PROCESSING && <ProcessModal open text={loadingText} />}
       </ThemeProvider>

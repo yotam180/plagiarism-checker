@@ -1,11 +1,9 @@
 import spacy
-import random
 import numpy as np
-
 from collections import Counter
-from typing import NamedTuple
 
 from math_util import softmax
+
 
 nlp = spacy.load("en_core_web_md")
 
@@ -28,7 +26,7 @@ class Document(object):
         entities = self._get_entity_counter().keys()
         counts = self._get_entity_counter().values()
 
-        return np.array(list(entities)), np.array(list(counts), dtype=np.float64)
+        return np.array(list(entities)), np.fromiter(counts, dtype=np.float64)
 
     def get_weighted_entities(self):
         entities, counts = self.get_entities()
@@ -42,10 +40,6 @@ class Document(object):
             self.counter = Counter(ent.text for ent in self.doc.ents if Document._filter_entity(ent))
 
         return self.counter
-
-    @staticmethod
-    def _filter_entity(entity):
-        return entity.label_ not in IRRELEVANT_TOKEN_TYPES
         
     @staticmethod 
     def _entity_weight(entities, counts):
@@ -66,3 +60,6 @@ class Document(object):
                 softmax(lengths) * ENTITY_LENGTH_WEIGHT + \
                 softmax(counts) * ENTITY_COUNT_WEIGHT
 
+    @staticmethod
+    def _filter_entity(entity):
+        return entity.label_ not in IRRELEVANT_TOKEN_TYPES

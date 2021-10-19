@@ -143,7 +143,7 @@ const HighlightedSentence = ({ text, color, suspect }) => {
                   marginTop: "0.6rem",
                 }}
               >
-                {suspect.sentence}
+                "{suspect.sentence}"
               </div>
             </Card>
           }
@@ -186,7 +186,14 @@ const show_analysis = (analysis) => {
   return els;
 };
 
-const TextArea = ({ editable, rawText, analysis, onChange, onSubmit }) => {
+const TextArea = ({
+  editable,
+  rawText,
+  analysis,
+  onChange,
+  onSubmit,
+  onReturn,
+}) => {
   const classes = useStyles();
 
   return (
@@ -210,9 +217,9 @@ const TextArea = ({ editable, rawText, analysis, onChange, onSubmit }) => {
                 variant="contained"
                 color="primary"
                 className={classes.processButton}
-                onClick={onSubmit}
+                onClick={editable ? onSubmit : onReturn}
               >
-                Check for Plagiarism
+                {editable ? "Check for Plagiarism" : "Try again"}
               </Button>
             </div>
           </Card>

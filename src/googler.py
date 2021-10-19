@@ -15,13 +15,11 @@ def fetch_parallel(search_terms, num_results=10, lang="en"):
         'https://www.google.com/search?q={}&num={}&hl={}'.format(
             escaped_search_term, num_results+1, lang) for escaped_search_term in escaped_search_terms]
 
-    print(len(google_urls))
     rs = [grequests.get(u, headers=usr_agent) for u in google_urls[:10]]
-    print(rs)
     rs = grequests.map(rs, gtimeout=10)
-    print("alive")
     
-    texts = [response.text for response in rs]
+    texts = [response.text for response in rs if response]
+    print(len(texts))
     return texts
 
 
