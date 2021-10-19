@@ -18,6 +18,16 @@ class Document(object):
         self.doc = nlp(doc_text)
         self.counter = None
 
+    def get_weighted_entities(self):
+        """
+        Returns a numpy array of entities (strings) and a numpy array of their corresponding weights.
+        """
+        entities, counts = self.get_entities()
+        weighted = Document._entity_weight(entities, counts)
+
+        sort_index = weighted.argsort()[::-1]
+        return entities[sort_index], weighted[sort_index]
+
     def get_entities(self):
         """
         Returns two numpy arrays - one with the entities themselves (strings), and one with their counts (float64)
@@ -27,13 +37,6 @@ class Document(object):
         counts = self._get_entity_counter().values()
 
         return np.array(list(entities)), np.fromiter(counts, dtype=np.float64)
-
-    def get_weighted_entities(self):
-        entities, counts = self.get_entities()
-        weighted = Document._entity_weight(entities, counts)
-
-        sort_index = weighted.argsort()[::-1]
-        return entities[sort_index], weighted[sort_index]
 
     def _get_entity_counter(self):
         if not self.counter:
@@ -52,6 +55,10 @@ class Document(object):
         ENTITY_LENGTH_WEIGHT = 0.5
         ENTITY_LOCATION_WEIGHT = 1.0
         ENTITY_COUNT_WEIGHT = 2
+
+        if not len(entities):
+            # TODO: Overcome this problem. What can we do if we hadn't found any entities?
+            raise ValueError("No entities found in text!")
         
         lengths = np.array(list(map(len, entities)))
         locations = np.arange(len(entities), 0, -1)

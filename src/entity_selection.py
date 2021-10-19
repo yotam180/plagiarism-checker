@@ -8,30 +8,36 @@ def random_entity_select(entities: np.array, weights: np.array, entity_selection
     Selects randomized sets of `entity_selection_size` entities, based on the `weights` parameter (higher-weight entities
     will be chosen more frequently)
 
-    TODO: Force sets to contain different entities (no double entities) - done, this should be implemented more efficiently
     """
-    # choices = random.choices(entities, weights=weights, k=entity_selection_size * count)
-    # return np.array(choices).reshape(-1, entity_selection_size)
-
-    results = []
-    for i in range(count):
-        results.append(_randomly_select_with_weights(entities, weights, entity_selection_size))
-
-    return results
+    return [_randomly_select_with_weights(entities, weights, entity_selection_size) for _ in range(count)]
 
 
-def _randomly_select_with_weights(entities: np.array, weights: np.array, entity_selection_size=3):
-    ents = entities
-    w = weights
-    results = []
-    for i in range(entity_selection_size):
-        if not len(ents):
-            break
+def _randomly_select_with_weights(entities: np.array, weights: np.array, count: int = 3):
+    return list(_pop_random_n(entities, weights, count))
 
-        [choice] = random.choices(ents, weights=list(w), k=1)
-        
-        w = w[ents != choice]
-        ents = ents[ents != choice]
-        results.append(choice)
 
-    return results
+def _pop_random(entities: np.array, weights: np.array):
+    """
+    Pops a (weighted) randomly selected element, and returns:
+        - The popped elements
+        - The entities list without the popped element
+        - The weights list without the weight of the popped element
+    """
+    if not len(entities):
+        raise ValueError("Cannot pop out of an empty array")
+
+    [choice] = random.choices(entities, weights=weights, k=1)
+
+    return choice, entities[entities != choice], weights[entities != choice]
+
+
+def _pop_random_n(entities: np.array, weights: np.array, count: int = 3):
+    """
+    Yield up to `count` different randomly chosen entities from the entities array.
+    """
+    for _ in range(count):
+        if not len(entities):
+            return
+
+        choice, entities, weights = _pop_random(entities, weights)
+        yield choice
