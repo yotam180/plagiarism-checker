@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import Sentence from "./Components/Sentence";
+import SuspectCard from "./Components/SuspectCard";
 
 const useStyles = makeStyles((theme) => ({
   textArea: {
@@ -60,11 +61,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     borderRadius: 50,
     color: "white",
-  },
-  suspectCard: {
-    padding: "1rem",
-    fontSize: "0.95rem",
-    minWidth: "30rem",
   },
 }));
 
@@ -119,26 +115,12 @@ const HighlightedSentence = ({ text, color, suspect }) => {
       text={text}
       color={color}
       tooltipComponent={
-        <Card className={classes.suspectCard}>
-          Sentence found in{" "}
-          <a href={suspect.document} target="_blank">
-            {suspect.document}
-          </a>{" "}
-          with {Math.round(suspect.score * 1000) / 10}% confidence
-          <br />
-          <div
-            style={{
-              fontStyle: "italic",
-              color: "#333",
-              backgroundColor: "whitesmoke",
-              padding: "0.5rem",
-              borderRadius: 5,
-              marginTop: "0.6rem",
-            }}
-          >
-            "{suspect.sentence}"
-          </div>
-        </Card>
+        <SuspectCard
+          articleURL={suspect.document}
+          score={suspect.score}
+          plagiarisedSentence={suspect.sentence}
+          color={color}
+        />
       }
     />
   );

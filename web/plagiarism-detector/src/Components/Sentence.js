@@ -1,3 +1,7 @@
+/**
+ * Sentence is a component to show a (potentially) highlighted sentence with a custom tooltip
+ */
+
 import { makeStyles, Tooltip } from "@material-ui/core";
 import React from "react";
 
@@ -49,7 +53,7 @@ const Sentence = ({ text, color, tooltipComponent }) => {
     </span>
   );
 
-  if (highlighted) {
+  if (tooltipComponent) {
     textSpan = (
       <Tooltip interactive title={tooltipComponent}>
         {textSpan}
