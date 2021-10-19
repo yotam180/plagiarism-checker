@@ -7,6 +7,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import React from "react";
+import Sentence from "./Components/Sentence";
 
 const useStyles = makeStyles((theme) => ({
   textArea: {
@@ -59,20 +60,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     borderRadius: 50,
     color: "white",
-  },
-  highlighted: {
-    borderRadius: 10,
-    paddingLeft: "0.4rem",
-    paddingRight: "0.4rem",
-    marginRight: "0.2rem",
-    cursor: "pointer",
-    transition: "background-image 0.2s ease-in-out",
-
-    "&:hover": {
-      textDecoration: "underline",
-      textDecorationThickness: 2,
-      backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.2) 0 0)",
-    },
   },
   suspectCard: {
     padding: "1rem",
@@ -128,41 +115,32 @@ const HighlightedSentence = ({ text, color, suspect }) => {
   console.log(text, count_newlines(text));
 
   return (
-    <>
-      {make_newlines(count_newlines(text))}
-      {color ? (
-        <Tooltip
-          interactive
-          title={
-            <Card className={classes.suspectCard}>
-              Sentence found in{" "}
-              <a href={suspect.document} target="_blank">
-                {suspect.document}
-              </a>{" "}
-              with {Math.round(suspect.score * 1000) / 10}% confidence
-              <br />
-              <div
-                style={{
-                  fontStyle: "italic",
-                  color: "#333",
-                  backgroundColor: "whitesmoke",
-                  padding: "0.5rem",
-                  borderRadius: 5,
-                  marginTop: "0.6rem",
-                }}
-              >
-                "{suspect.sentence}"
-              </div>
-            </Card>
-          }
-        >
-          {make_span()}
-        </Tooltip>
-      ) : (
-        make_span()
-      )}
-      &nbsp;
-    </>
+    <Sentence
+      text={text}
+      color={color}
+      tooltipComponent={
+        <Card className={classes.suspectCard}>
+          Sentence found in{" "}
+          <a href={suspect.document} target="_blank">
+            {suspect.document}
+          </a>{" "}
+          with {Math.round(suspect.score * 1000) / 10}% confidence
+          <br />
+          <div
+            style={{
+              fontStyle: "italic",
+              color: "#333",
+              backgroundColor: "whitesmoke",
+              padding: "0.5rem",
+              borderRadius: 5,
+              marginTop: "0.6rem",
+            }}
+          >
+            "{suspect.sentence}"
+          </div>
+        </Card>
+      }
+    />
   );
 };
 
