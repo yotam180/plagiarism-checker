@@ -1,11 +1,4 @@
-import {
-  Button,
-  Card,
-  CardHeader,
-  makeStyles,
-  TextField,
-  Tooltip,
-} from "@material-ui/core";
+import { Button, Card, makeStyles } from "@material-ui/core";
 import React from "react";
 import Sentence from "./Components/Sentence";
 import SuspectCard from "./Components/SuspectCard";
@@ -64,52 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const count_newlines = (text) => {
-  for (let i in text) {
-    if (text[i] != "\n") {
-      return i;
-    }
-  }
-
-  return text.length;
-};
-
 const HighlightedSentence = ({ text, color, suspect }) => {
-  const classes = useStyles();
-
-  const colors = {
-    red: "#fb8fa3",
-    orange: "#fed087",
-    yellow: "#fefccf",
-  };
-  const hardColors = {
-    red: "#ea526f",
-    orange: "#e89005",
-    yellow: "transparent",
-  };
-
-  const make_span = () => (
-    <span
-      style={{
-        backgroundColor: colors[color],
-        textDecorationColor: hardColors[color] || "transparent",
-      }}
-      className={color ? classes.highlighted : undefined}
-    >
-      {text}
-    </span>
-  );
-
-  const make_newlines = (n) => {
-    let els = [];
-    for (let i = 0; i < n; ++i) {
-      els.push(<br key={"br" + i} />);
-    }
-    return els;
-  };
-
-  console.log(text, count_newlines(text));
-
   return (
     <Sentence
       text={text}
