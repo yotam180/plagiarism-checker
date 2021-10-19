@@ -117,11 +117,19 @@ const HighlightedSentence = ({ text, color, suspect }) => {
     </span>
   );
 
+  const make_newlines = (n) => {
+    let els = [];
+    for (let i = 0; i < n; ++i) {
+      els.push(<br key={"br" + i} />);
+    }
+    return els;
+  };
+
+  console.log(text, count_newlines(text));
+
   return (
     <>
-      {[...new Array(count_newlines(text))].map((_, i) => (
-        <br key={i} />
-      ))}
+      {make_newlines(count_newlines(text))}
       {color ? (
         <Tooltip
           interactive
