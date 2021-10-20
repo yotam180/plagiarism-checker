@@ -71,4 +71,6 @@ def static_files(path):
 def index():
     return send_from_directory("templates", "index.html")
 
-app.run(debug=True, port=8080)
+
+if __name__ == "__main__":
+    app.run(debug=True, port=8080)
