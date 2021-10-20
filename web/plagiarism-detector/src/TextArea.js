@@ -64,9 +64,9 @@ const HighlightedSentence = ({ text, color, suspect }) => {
       color={color}
       tooltipComponent={
         <SuspectCard
-          articleURL={suspect.document}
-          score={suspect.score}
-          plagiarisedSentence={suspect.sentence}
+          articleURL={suspect && suspect.document}
+          score={suspect && suspect.score}
+          plagiarisedSentence={suspect && suspect.sentence}
           color={color}
         />
       }

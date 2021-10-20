@@ -45,6 +45,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getDomainFromURL = (url) => {
+  try {
+    return new URL(url).hostname;
+  } catch (error) {
+    return url;
+  }
+};
+
 const SuspectCard = ({ articleURL, score, plagiarisedSentence, color }) => {
   const classes = useStyles();
 
@@ -84,7 +92,7 @@ const SuspectCard = ({ articleURL, score, plagiarisedSentence, color }) => {
             <Typography variant="body2">Similar sentence found on:</Typography>
             <div className={classes.documentLink}>
               <a href={articleURL} target="_blank" rel="noreferrer noopener">
-                {new URL(articleURL).hostname}
+                {getDomainFromURL(articleURL)}
               </a>
             </div>
           </Grid>

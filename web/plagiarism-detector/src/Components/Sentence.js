@@ -42,7 +42,7 @@ const Sentence = ({ text, color, tooltipComponent }) => {
   };
 
   const backgroundColor = colors[color] || color;
-  const highlighted = Boolean(color || tooltipComponent);
+  const highlighted = Boolean(color && tooltipComponent);
 
   let textSpan = (
     <span
@@ -53,7 +53,7 @@ const Sentence = ({ text, color, tooltipComponent }) => {
     </span>
   );
 
-  if (tooltipComponent) {
+  if (highlighted) {
     textSpan = (
       <Tooltip interactive title={tooltipComponent}>
         {textSpan}
