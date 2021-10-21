@@ -15,7 +15,7 @@ const States = {
   DONE: "DONE",
 };
 
-const REMOTE_URL = "http://localhost:8080/process"; // TODO: Change this URL in production?
+const REMOTE_URL = process.env.REMOTE_URL || "http://localhost:8080/process/";
 
 function App() {
   const [state, setState] = useState(States.EDITING);
