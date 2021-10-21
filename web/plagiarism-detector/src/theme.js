@@ -10,7 +10,7 @@ export default createTheme({
     h1: {
       fontSize: "2rem",
       color: "white",
-      fontWeight: 400,
+      fontWeight: 700,
     },
   },
   overrides: {

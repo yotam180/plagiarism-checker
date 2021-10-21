@@ -36,8 +36,8 @@ const Sentence = ({ text, color, tooltipComponent }) => {
   const classes = useStyles();
 
   const colors = {
-    red: "#fb8fa3",
-    orange: "#fed087",
+    red: "#fcb1bf",
+    orange: "#fed99f",
     yellow: "#fefccf",
   };
 

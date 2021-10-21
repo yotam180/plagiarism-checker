@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     margin: "2em",
     marginBottom: "4em",
+    borderRadius: 15,
   },
   textBox: {
     flex: 1,
