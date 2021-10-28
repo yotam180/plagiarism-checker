@@ -1,0 +1,13 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+        "Name": "public.ecr.aws/a0z6i5n0/plagiarism-checker-backend",
+        "Update": "true"
+    },
+    "Ports": [
+        {
+        "ContainerPort": 8080,
+        "HostPort": 8080
+        }
+    ]
+}

@@ -16,7 +16,7 @@ const States = {
 };
 
 const REMOTE_URL =
-  process.env.REACT_APP_REMOTE_URL || "http://localhost:8080/process/";
+  process.env.REACT_APP_REMOTE_URL || "http://localhost:8080/process";
 
 function App() {
   const [state, setState] = useState(States.EDITING);
